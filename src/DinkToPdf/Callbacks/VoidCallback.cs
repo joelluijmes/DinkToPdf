@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading.Tasks;
 
-namespace DinkToPdf
+namespace DinkToPdf.Callbacks
 {
     [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
     public delegate void VoidCallback(IntPtr converter);

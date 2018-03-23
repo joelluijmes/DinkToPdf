@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using DinkToPdf.Contracts;
 
 namespace DinkToPdf.TestWebServer
 {
@@ -38,7 +37,7 @@ namespace DinkToPdf.TestWebServer
         public void ConfigureServices(IServiceCollection services)
         {
             // Add converter to DI
-            services.AddSingleton(typeof(IConverter), new SynchronizedConverter(new PdfTools()));
+            services.AddSingleton(typeof(IPdfConverter), new SynchronizedConverter(new PdfTools()));
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 

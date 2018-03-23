@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using DinkToPdf;
+using DinkToPdf.Document;
+using DinkToPdf.Settings;
 
 namespace DinkToPdf.TestThreadSafe
 {
@@ -15,7 +17,7 @@ namespace DinkToPdf.TestThreadSafe
         {
             converter = new SynchronizedConverter(new PdfTools());
             
-            var doc = new HtmlToPdfDocument()
+            var doc = new PdfDocument()
             {
                 GlobalSettings = {
                     ColorMode = ColorMode.Grayscale,
@@ -24,7 +26,7 @@ namespace DinkToPdf.TestThreadSafe
                     Margins = new MarginSettings() { Top = 10 },
                 },
                 Objects = {
-                    new ObjectSettings() {
+                    new PdfPage() {
                         Page = "http://www.color-hex.com/"
                     }
                 }
@@ -32,14 +34,14 @@ namespace DinkToPdf.TestThreadSafe
 
             Task.Run(() => Action(doc));
             
-            var doc2 = new HtmlToPdfDocument()
+            var doc2 = new PdfDocument()
             {
                 GlobalSettings = {
                     PaperSize = PaperKind.A4Small
                 },
 
                 Objects = {
-                    new ObjectSettings()
+                    new PdfPage()
                     {
                         Page = "http://google.com/",
                     }
@@ -52,7 +54,7 @@ namespace DinkToPdf.TestThreadSafe
             Console.ReadKey();
         }
 
-        private static void Action(HtmlToPdfDocument doc)
+        private static void Action(PdfDocument doc)
         {
             byte[] pdf = converter.Convert(doc);
 

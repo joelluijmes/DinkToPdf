@@ -1,13 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 
-namespace DinkToPdf
+namespace DinkToPdf.Settings
 {
     public class MarginSettings
     {
+        public MarginSettings()
+        {
+            Unit = Unit.Millimeters;
+        }
+
+        public MarginSettings(double top, double right, double bottom, double left) : this()
+        {
+            Top = top;
+            Bottom = bottom;
+            Left = left;
+            Right = right;
+        }
+
         public Unit Unit { get; set; }
 
         public double? Top { get; set; }
@@ -18,45 +27,30 @@ namespace DinkToPdf
 
         public double? Right { get; set; }
 
-        public MarginSettings()
-        {
-            Unit = Unit.Millimeters;
-        }
-
-        public MarginSettings(double top, double right, double bottom, double left) : this()
-        {
-            Top = top;
-
-            Bottom = bottom;
-
-            Left = left;
-
-            Right = right;
-        }
-
         public string GetMarginValue(double? value)
         {
             if (!value.HasValue)
-            {
                 return null;
-            }
 
-            string strUnit = "in";
+            string strUnit;
 
             switch (Unit)
             {
-                case Unit.Inches: strUnit = "in";
-                    break;
-                case Unit.Millimeters: strUnit = "mm";
-                    break;
-                case Unit.Centimeters: strUnit = "cm";
-                    break;
-                default: strUnit = "in";
-                    break;
+            case Unit.Inches:
+                strUnit = "in";
+                break;
+            case Unit.Millimeters:
+                strUnit = "mm";
+                break;
+            case Unit.Centimeters:
+                strUnit = "cm";
+                break;
+            default:
+                strUnit = "in";
+                break;
             }
 
             return value.Value.ToString("0.##", CultureInfo.InvariantCulture) + strUnit;
-
         }
     }
 }

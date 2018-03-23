@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using DinkToPdf.Contracts;
 using System.IO;
+using DinkToPdf.Document;
+using DinkToPdf.Settings;
 
 namespace DinkToPdf.TestWebServer.Controllers
 {
     [Route("api/[controller]")]
     public class ConvertController : Controller
     {
-        private IConverter _converter;
+        private IPdfConverter _converter;
 
-        public ConvertController(IConverter converter)
+        public ConvertController(IPdfConverter converter)
         {
             _converter = converter;
         }
@@ -22,7 +23,7 @@ namespace DinkToPdf.TestWebServer.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            var doc = new HtmlToPdfDocument()
+            var doc = new PdfDocument()
             {
                 GlobalSettings = {
                     PaperSize = PaperKind.A3,
@@ -30,11 +31,11 @@ namespace DinkToPdf.TestWebServer.Controllers
                 },
 
                 Objects = {
-                    new ObjectSettings()
+                    new PdfPage()
                     {
                         Page = "http://google.com/",
                     },
-                     new ObjectSettings()
+                     new PdfPage()
                     {
                         Page = "https://github.com/",
                          

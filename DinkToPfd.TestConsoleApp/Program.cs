@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.IO;
 using DinkToPdf;
+using DinkToPdf.Document;
+using DinkToPdf.EventArgs;
+using DinkToPdf.Settings;
 
 namespace DinkToPdf.ConsoleApp
 {
@@ -11,7 +14,7 @@ namespace DinkToPdf.ConsoleApp
     {
         public static void Main(string[] args)
         {
-            var converter = new BasicConverter(new PdfTools());
+            var converter = new PdfConverter(new PdfTools());
 
             converter.PhaseChanged += Converter_PhaseChanged;
             converter.ProgressChanged += Converter_ProgressChanged;
@@ -19,7 +22,7 @@ namespace DinkToPdf.ConsoleApp
             converter.Warning += Converter_Warning;
             converter.Error += Converter_Error;
 
-            var doc = new HtmlToPdfDocument()
+            var doc = new PdfDocument()
             {
                 GlobalSettings = {
                     ColorMode = ColorMode.Color,
@@ -27,7 +30,7 @@ namespace DinkToPdf.ConsoleApp
                     PaperSize = PaperKind.A4,
                 },
                 Objects = {
-                    new ObjectSettings() {
+                    new PdfPage() {
                         PagesCount = true,
                         HtmlContent = @"Lorem ipsum dolor sit amet, consectetur adipiscing elit. In consectetur mauris eget ultrices iaculis. Ut et odio viverra, molestie lectus nec, venenatis turpis. Nulla quis euismod nisl. Duis scelerisque eros nec dui facilisis, sit amet porta odio varius. Praesent vitae sollicitudin leo. Sed vitae quam in massa eleifend porta. Aliquam pulvinar orci dapibus porta laoreet. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Sed commodo tortor eget dolor hendrerit dapibus.
                                         Vivamus lorem diam, vulputate at ultrices quis, tristique eu nunc. Sed bibendum hendrerit leo. Nulla nec risus turpis. Vivamus at tortor felis. Donec eget posuere libero. Pellentesque erat nunc, molestie eget gravida vitae, eleifend a eros. Integer in tortor sed elit aliquam vehicula eget a erat. Vivamus nisi augue, venenatis ut commodo vel, congue id neque. Curabitur convallis dictum semper. Nulla accumsan urna aliquet, mattis dolor molestie, fermentum metus. Quisque at nisi non augue tempor commodo et pretium orci.
@@ -35,8 +38,8 @@ namespace DinkToPdf.ConsoleApp
                                         Aliquam mollis placerat blandit. Morbi in nibh urna. Donec nisl enim, tristique id tincidunt sed, pharetra non mi. Morbi viverra arcu vulputate risus dignissim efficitur. Vivamus dolor eros, finibus et porttitor a, pellentesque a lectus. Integer pellentesque maximus velit sit amet sollicitudin. Nulla a elit eget augue pretium luctus quis eu metus. Aenean nec dui id nibh tempor dapibus. Pellentesque dignissim ullamcorper mauris, vitae pharetra turpis sodales sit amet. Etiam et bibendum neque.
                                         Nulla gravida sit amet velit eu aliquet. Etiam sit amet elit leo. Sed nec arcu tincidunt, placerat turpis quis, laoreet nulla. Aenean neque est, fringilla non nulla in, laoreet vehicula nunc. Etiam vel nisl sit amet lectus pellentesque eleifend. Etiam sed nisi dolor. Mauris quis tincidunt ex. Aliquam porta mattis tempor. Maecenas fringilla bibendum elementum. Vestibulum quis tempus libero, vitae cursus neque. Suspendisse lectus risus, lacinia consectetur enim quis, ullamcorper porta tortor. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                         WebSettings = { DefaultEncoding = "utf-8" },
-                        HeaderSettings = { FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
-                        FooterSettings = { FontSize = 9, Right = "Page [page] of [toPage]" }
+                        PdfHeader = { FontSize = 9, Right = "Page [page] of [toPage]", Line = true },
+                        PdfFooter = { FontSize = 9, Right = "Page [page] of [toPage]" }
                     }
                 }
             };
@@ -56,27 +59,27 @@ namespace DinkToPdf.ConsoleApp
             Console.ReadKey();
         }
 
-        private static void Converter_Error(object sender, EventDefinitions.ErrorArgs e)
+        private static void Converter_Error(object sender, ErrorArgs e)
         {
             Console.WriteLine("[ERROR] {0}", e.Message);
         }
 
-        private static void Converter_Warning(object sender, EventDefinitions.WarningArgs e)
+        private static void Converter_Warning(object sender, WarningArgs e)
         {
             Console.WriteLine("[WARN] {0}", e.Message);
         }
 
-        private static void Converter_Finished(object sender, EventDefinitions.FinishedArgs e)
+        private static void Converter_Finished(object sender, FinishedArgs e)
         {
             Console.WriteLine("Conversion {0} ", e.Success ? "successful" : "unsucessful");
         }
 
-        private static void Converter_ProgressChanged(object sender, EventDefinitions.ProgressChangedArgs e)
+        private static void Converter_ProgressChanged(object sender, ProgressChangedArgs e)
         {
             Console.WriteLine("Progress changed {0}", e.Description);
         }
 
-        private static void Converter_PhaseChanged(object sender, EventDefinitions.PhaseChangedArgs e)
+        private static void Converter_PhaseChanged(object sender, PhaseChangedArgs e)
         {
             Console.WriteLine("Phase changed {0} - {1}", e.CurrentPhase, e.Description);
         }
